@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='UTF-8'/>
+        <title>Admin Panel</title>
+
+        <link rel="stylesheet" href="/stylesheets/style.css"/> 
+        <link rel="stylesheet" href="/stylesheets/item.css"/>
+
+        <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-transition-group/4.3.0/react-transition-group.min.js"></script>
+    </head>
+    <body>
+        <div id="navBar">
+            <div id="leftNav">
+                <div class="iconButton" id="sideMenuButton">
+                    <img src="/images/menu.svg" width="50%" style="user-select: none;"/>
+                </div>
+            </div>
+        </div>
+        <div id="sideMenu"></div>
+        <div id="remainingBody" style="position: absolute; top: 11%; width: 100%;">
+            <div id="records">
+                <div class="raisedButton"><div style="width: 50px; height: 50px;"></div></div>
+                <div class="item">
+                    <div class="attribute"><h3>S.no</h3></div>
+                    <div class="attribute"><h3>User ID</h3></div>
+                    <div class="attribute"><h3>Email Address</h3></div>
+                    <div class="attribute"><h3>Name</h3></div>
+                    <div class="attribute"><h3>Phone</h3></div>
+                    <div class="attribute"><h3>DOB</h3></div>
+                    <div class="attribute"><h3>Photo link</h3></div>
+                    <div style="width:50px;"></div>
+                </div>
+                <div id="recordsHolder"></div>
+            </div>
+        </div>
+        <script type="text/babel" src="/javascripts/user/item.js"></script>
+        <script type="text/javascript" src="/javascripts/iconButton.js"></script>
+        <script type="text/babel" src="/javascripts/user/getUserData.js"></script>
+
+        <script>
+            window.addEventListener("click", function(e){
+                if(!e.target.classList.contains("menu") && (!e.target.parentElement || !e.target.parentElement.classList.contains("menu"))){
+                    let menus = document.getElementsByClassName("hovermenu");
+                    for(var menu of menus){
+                        menu.style.display = "none";
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>

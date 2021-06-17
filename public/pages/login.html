@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Admin Panel</title>
+    </head>
+    <body>
+        <input type="text" name="password" id="password"/>
+        <button onClick="password = document.getElementById('password').value;
+        window.location.href = `/pages/category.html?password=${password}`">Enter</button>
+        <script type="text/javascript">
+            localStorage.serverURL = "localhost:3000";
+        </script>
+    </body>
+</html>

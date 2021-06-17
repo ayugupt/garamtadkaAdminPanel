@@ -1,0 +1,72 @@
+.item{
+    width: 100%;
+    height: inherit;
+    padding: 8px;
+    display: flex;
+    opacity: 1;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-top: 1px solid black;
+}
+  
+.attribute{
+    flex-grow: 1;
+    flex-basis: auto;
+    flex-shrink: 1;
+    display: flex;
+    width: 10%;
+    align-items: center;
+    word-break: break-all;
+    padding-left: 8px;
+}
+
+.itemAnimation-exit{
+    height: 66px;
+}
+
+.itemAnimation-exit-active{
+    opacity: 0;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    height: 0px;
+    transition: height 0.3s linear, opacity 0.3s linear, padding-top 0.3s linear, padding-bottom 0.3s linear;
+}
+
+.itemAnimation-exit-done{
+    height: 0px;
+    padding-top:0px;
+    padding-bottom: 0px;
+    opacity: 0;
+}
+
+.hovermenu{
+    display: none;
+    flex-flow: column nowrap;
+    padding: 8px;
+    position: absolute;
+    left: -100%;
+    top: 100%;
+    background-color: white;
+    font-weight: 400;
+    font-size: 16px;
+    border: 1px solid lightgray;
+    z-index: 4;
+}
+
+.subAnimation-appear{
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 0;
+    color: transparent;
+}
+
+.subAnimation-appear-active{
+    padding-top: 8px;
+    padding-bottom: 8px;
+    font-size: 1em;
+    transition: padding-top 0.3s linear, padding-bottom 0.3s linear, font-size 0.3s linear;
+}
+
+.attInput{
+    width: 70%;
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='UTF-8'/>
+        <title>Admin Panel</title>
+
+        <link rel="stylesheet" href="/stylesheets/style.css"/> 
+        <link rel="stylesheet" href="/stylesheets/item.css"/>
+
+        <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-transition-group/4.3.0/react-transition-group.min.js"></script>
+    </head>
+    <body>
+        <div id="navBar">
+            <div id="leftNav">
+                <div class="iconButton" id="sideMenuButton">
+                    <img src="/images/menu.svg" width="50%" style="user-select: none;"/>
+                </div>
+            </div>
+        </div>
+        <div id="sideMenu"></div>
+        <div id="remainingBody" style="position: relative; top: 11vh; width: 100%;">
+            <div id="records">
+                <div style="display: flex; margin-bottom: 16px;">
+                    <div class="raisedButton" onClick="createOrCancel(event)"><img src="/images/plus.png" style="width:100%; opacity: 0.6;" id="addClose"/></div>
+                    <div class="raisedButton" onClick="getCategoryData(true)" style="margin-left: 16px;"><img src="/images/reorder.png" style="width:100%; opacity: 0.6;" id="reorder"/></div>
+                </div>
+                <div id="inputHolder" style="display: none;">
+                    <input type="text" name="name" id="nameInput" placeholder="Category Name" class="input"/>
+                    <input type="text" name="image" id="imageInput" placeholder="Category Image" class="input"/>
+                    <input type="text" name="priority" id="priorityInput" placeholder="Category priority" class="input"/>
+                    <div class="raisedButton" style="margin-top: 16px; width: 100px; font-size: 14px;" onclick="addRSSInput()">Add RSS link</div>
+                    <div class="raisedButton" style="margin-top: 16px; width: 50px; font-size: 14px;" onclick="addCategory()">Done</div>
+                </div>
+                <div class="item">
+                    <div class="attribute"><h3>S.no</h3></div>
+                    <div class="attribute"><h3>Name</h3></div>
+                    <div class="attribute"><h3>Image</h3></div>
+                    <div class="attribute"><h3>Priority</h3></div>
+                    <div style="width:50px;"></div>
+                </div>
+                <div id="recordsHolder"></div>
+            </div>
+        </div>
+        <script type="text/javascript" src="/javascripts/iconButton.js"></script>
+        <script type="text/babel" src="/javascripts/category/getCategoryData.js"></script>
+        <script type="text/babel" src="/javascripts/category/categoryItem.js"></script>
+        <script type="text/javascript" src="/javascripts/category/addCategory.js"></script>
+
+        <script>
+            window.addEventListener("click", function(e){
+                if(!e.target.classList.contains("menu") && (!e.target.parentElement || !e.target.parentElement.classList.contains("menu"))){
+                    let menus = document.getElementsByClassName("hovermenu");
+                    for(var menu of menus){
+                        menu.style.display = "none";
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>
