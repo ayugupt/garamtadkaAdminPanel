@@ -15,14 +15,14 @@ const util = require('util');
 var path = require('path');
 
 AWS.config.update({
-    accessKeyId: "AKIAYHIVULFULEFYZOBY",//"AKIAQ62ZT6HUDBUOSMUZ",
-    secretAccessKey: "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"//"Hu9NaRXuPLTcMZDFHc0e9s/MOR0gLieyBA4xwsP0"
+    accessKeyId: "AKIAQ62ZT6HUDBUOSMUZ",
+    secretAccessKey: "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"
 })
 
 var s3 = new AWS.S3();
 
 var params = {
-  Bucket: "ayutestbucket",
+  Bucket: "garamtadka",
 }
 
 const s3Actions = {
