@@ -4,15 +4,13 @@ class Item extends React.Component{
     constructor(props){
         super(props);
         this.props = props;
-        this.state = {exitAnimation: true, editing:false, subAnimation: false, 
-            priority:this.props.priority, photo:this.props.photo, rss_links:[]}
+        this.state = {exitAnimation: true, editing:false, showRSSLinks: false, 
+            photo:this.props.photo, rss_links:[]}
 
-        this.animTimeout = {itemExit:300, subAppear: 300}
+        this.animTimeout = {itemExit:300}
 
         this.optionsRef = React.createRef();
-        //this.priorityRef = React.createRef();
         this.photoRef = React.createRef();
-
         this.mainRef = React.createRef();
     }
 
@@ -25,33 +23,48 @@ class Item extends React.Component{
     }
 
     delete(){
-        var req = new XMLHttpRequest();
-        req.open('DELETE', `http://${localStorage.serverURL}/categories/delete?apikey=fVKHo9QEUQgWXjQ`, true);
-        req.setRequestHeader('Content-Type', 'application/json')
-        req.send(JSON.stringify({
+        httpRequest('DELETE', `http://${localStorage.serverURL}/categories/delete?apikey=fVKHo9QEUQgWXjQ`, JSON.stringify({
             name:this.props.name
-        }));
-        req.addEventListener("load", function(){
+        })).then((val)=>{
             this.setState({exitAnimation:false})
-        }.bind(this))
-
-        req.addEventListener("error", function(err){
-            console.error(error);
+        }).catch((err)=>{
+            alert("There was an error, please refresh and try again")
         })
+        // var req = new XMLHttpRequest();
+        // req.open('DELETE', `http://${localStorage.serverURL}/categories/delete?apikey=fVKHo9QEUQgWXjQ`, true);
+        // req.setRequestHeader('Content-Type', 'application/json')
+        // req.send(JSON.stringify({
+        //     name:this.props.name
+        // }));
+        // req.addEventListener("load", function(){
+        //     this.setState({exitAnimation:false})
+        // }.bind(this))
+
+        // req.addEventListener("error", function(err){
+        //     console.error(error);
+        // })
     }
 
     edit(photo){
-        var req = new XMLHttpRequest();
-        req.open('PUT', `http://${localStorage.serverURL}/categories/update?apikey=fVKHo9QEUQgWXjQ`, true);
-        req.setRequestHeader("Content-Type", "application/json");
-        req.send(JSON.stringify({
+        httpRequest('PUT', `http://${localStorage.serverURL}/categories/update?apikey=fVKHo9QEUQgWXjQ`,JSON.stringify({
             category: this.props.name,
             image: photo,
-        }))
-
-        req.addEventListener("load", function(){
+        })).then((val)=>{
             this.setState({editing:false, photo:photo})
-        }.bind(this))
+        }).catch((err)=>{
+            alert("Error in editing, please try again")
+        })
+        // var req = new XMLHttpRequest();
+        // req.open('PUT', `http://${localStorage.serverURL}/categories/update?apikey=fVKHo9QEUQgWXjQ`, true);
+        // req.setRequestHeader('Content-Type', 'application/json');
+        // req.send(JSON.stringify({
+        //     category: this.props.name,
+        //     image: photo,
+        // }))
+
+        // req.addEventListener("load", function(){
+        //     this.setState({editing:false, photo:photo})
+        // }.bind(this))
     }
 
     getRSSFeeds(){
@@ -61,18 +74,16 @@ class Item extends React.Component{
 
         req.addEventListener("load", function(){
             let response = JSON.parse(req.responseText);
-            this.setState({subAnimation: true, rss_links:response.data});
+            this.setState({showRSSLinks: true, rss_links:response.data});
         }.bind(this))
     }
 
-    dragging(event){
-        event.dataTransfer.setData("index", this.props.index);
+    dragging(){
         this.props.setDrag(this.props.index);
-        //this.props.replaceFunc(this.props.index);
     }
 
-    dragOver(){
-        this.props.replaceFunc(this.props.index);
+    dragOver(e){
+        if(this.props.getDrag() != -1) this.props.replaceFunc(this.props.index);
     }
 
     dragEnd(){
@@ -82,7 +93,7 @@ class Item extends React.Component{
     render(){
 
         if(this.props.index%2 == 0){
-            this.state.itemColor = 'lightgray';
+            this.state.itemColor = '#e7eaed';
         }else{
             this.state.itemColor = 'white';
         }
@@ -93,37 +104,23 @@ class Item extends React.Component{
         timeout={this.animTimeout.itemExit} 
         onExited={this.props.func}
         >
-                {!this.state.editing?<div onDragStart={(event)=>this.dragging(event)} onDragOver={(event)=>this.dragOver(event)} draggable={this.props.canDrag} onDragEnd={(event)=>this.dragEnd(event)}>
+                {!this.state.editing?<div onDragStart={(event)=>this.dragging(event)} onDragOver={(event)=>this.dragOver(event)} onDragEnd={(event)=>this.dragEnd(event)} draggable={this.props.canDrag}>
                     <div className="item" style={{backgroundColor:this.state.itemColor}}>
                         <div className="attribute">{this.props.index+1}</div>
                         <div className="attribute">{this.props.name}</div>
                         <div className="attribute">{this.state.photo}</div>
-                        <div className="attribute">{this.props.priority}</div>
                         <div className="iconButton menu" onClick={this.showOptions.bind(this)} style={{position: "relative"}}>
                             <img src="/images/more.svg" style={{width:"50%"}}/>
                             <div className="hovermenu" ref={this.optionsRef}>
                                 <div style={{marginBottom: "8px", cursor:"pointer"}} onClick={this.delete.bind(this)}>Delete</div>
                                 <div style={{marginBottom: "8px", cursor:"pointer"}} onClick={()=>{this.setState({editing:true})}}>Edit</div>
-                                <div style={{cursor:"pointer"}} onClick={()=>{!this.state.subAnimation?this.getRSSFeeds():this.setState({subAnimation:false})}}>View RSS feeds</div>
+                                <div style={{cursor:"pointer"}} onClick={()=>{!this.state.showRSSLinks?this.getRSSFeeds():this.setState({showRSSLinks:false})}}>View RSS feeds</div>
                             </div>
                         </div>
                     </div>
                     {
-                        !this.state.subAnimation?null:
-                        this.state.rss_links.map((value, index)=>{
-                            return (<CSSTransition in={this.state.subAnimation}
-                                appear={true}
-                                enter={false}
-                                classNames="subAnimation"
-                                timeout={this.animTimeout.subAppear}
-                                key={value['rss_link']}
-                                >
-                                    <div className="item">
-                                        <div className="attribute">{value['rss_link']}</div>
-                                        <div className="attribute">{value.notification}</div>
-                                    </div>
-                                </CSSTransition>);
-                        })
+                        !this.state.showRSSLinks?null:
+                        <ItemRSS data={this.state.rss_links} name={this.props.name}/>
                     }
                 </div>
                 :
@@ -131,7 +128,6 @@ class Item extends React.Component{
                     <div className="attribute">{this.props.index+1}</div>
                     <div className="attribute">{this.props.name}</div>
                     <div className="attribute"><input type="text" name="photo" defaultValue={this.state.photo} ref={this.photoRef} className="attInput"/></div>
-                    <div className="attribute">{this.props.priority}</div>
                     <div style={{display:"flex", flexDirection:"column", width:"50px", height:"50px", justifyContent:"space-between"}}>
                         <button onClick={()=>{this.edit(this.photoRef.current.value)}} style={{width:"100%", height:"45%", fontSize:"12px"}}>Done</button>
                         <button onClick={()=>{this.setState({editing:false})}} style={{width:"100%", height:"45%", fontSize:"12px"}}>Cancel</button>
@@ -161,6 +157,10 @@ class ItemList extends React.Component{
 
     putPlaceholder(index){
         this.setState({placeHolder: index})
+    }
+
+    getDragIndex(){
+        return this.state.dragIndex;
     }
 
     sendRequest(method, url, name, priority){
@@ -201,14 +201,13 @@ class ItemList extends React.Component{
     }
 
     render(){
-
         const items = [];
         let data = this.props.data;
         for(let i = 0; i < this.props.data.length; i++){
             if(i == this.state.placeHolder && this.state.dragIndex > i){
                 items.push(<div style={{height:"66px"}} key="temp" onDragOver={(event)=>event.preventDefault()} onDrop={this.drop.bind(this)}></div>);
             }
-            items.push(<Item index={i} name={data[i].name} photo={data[i].image} priority={data[i].priority} func={this.removeFromList.bind(this, i)} replaceFunc={this.putPlaceholder.bind(this)} setDrag={this.setDragIndex.bind(this)} canDrag={this.props.canDrag} key={data[i].name}/>);
+            items.push(<Item index={i} name={data[i].name} photo={data[i].image} func={this.removeFromList.bind(this, i)} replaceFunc={this.putPlaceholder.bind(this)} setDrag={this.setDragIndex.bind(this)} canDrag={this.props.canDrag} getDrag={this.getDragIndex.bind(this)} key={data[i].name}/>);
             if(i == this.state.placeHolder && this.state.dragIndex < i){
                 items.push(<div style={{height:"66px"}} key="temp" onDragOver={(event)=>event.preventDefault()} onDrop={this.drop.bind(this)}></div>);
             }

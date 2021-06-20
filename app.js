@@ -4,10 +4,33 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const multer = require('multer');
+var upload = multer({dest:'uploads/'});
 
 var app = express();
+
+const AWS = require('aws-sdk');
+const fs = require('fs');
+const util = require('util');
+var path = require('path');
+
+AWS.config.update({
+    accessKeyId: "AKIAYHIVULFULEFYZOBY",//"AKIAQ62ZT6HUDBUOSMUZ",
+    secretAccessKey: "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"//"Hu9NaRXuPLTcMZDFHc0e9s/MOR0gLieyBA4xwsP0"
+})
+
+var s3 = new AWS.S3();
+
+var params = {
+  Bucket: "ayutestbucket",
+}
+
+const s3Actions = {
+  upload: (config)=>{
+      return util.promisify(s3.upload).call(s3, config);
+  }
+}
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,7 +42,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/pages/category.html', function(req, res, next){
-  console.log("hello");
   if(req.query.password == "garamtadka"){
     next();
   }else{
@@ -30,6 +52,17 @@ app.use('/pages/category.html', function(req, res, next){
 })
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.post('/uploadCategoryImage', upload.single('categoryImage'), async function(req, res){
+  params.Body = fs.createReadStream(path.join(__dirname, `./uploads/${req.file.filename}`));
+  params.Key = `categories/${req.body.categoryName}.${req.body.imageType}`;
+  let uploadResult = await s3Actions.upload(params);
+  res.send({message:"Successful", imageLink:uploadResult.Location});
+  fs.unlink(path.join(__dirname, `./uploads/${req.file.filename}`), function(){
+    console.log("deleted")
+  })
+})
+
 
 app.use('/', function(req, res, next){
   res.sendFile(path.join(__dirname, "./public/pages/login.html"));

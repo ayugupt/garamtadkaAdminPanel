@@ -4,9 +4,10 @@
     padding: 8px;
     display: flex;
     opacity: 1;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
     border-left: 1px solid black;
     border-right: 1px solid black;
-    border-top: 1px solid black;
 }
   
 .attribute{
@@ -58,6 +59,37 @@
     padding-bottom: 0;
     font-size: 0;
     color: transparent;
+}
+
+.att{
+    color: white;
+    border-radius: 5px;
+    padding: 4px;
+    width: 50px;
+    user-select: none;
+    margin-left: 8px;
+    text-align: center;
+}
+
+.attDelete{
+    background-color: red;
+}
+
+.attAdd{
+    background-color: green;
+}
+
+.subAnimation-appear .att{
+    color: transparent;
+    background-color: transparent;
+}
+
+.subAnimation-appear .attSelect{
+    display: none;
+}
+
+.subAnimation-appear .attInput{
+    display: none;
 }
 
 .subAnimation-appear-active{

@@ -1,0 +1,26 @@
+.imageDropper{
+    width: 30vw;
+    height: 30vh;
+    background-color: #e7eaed;
+    margin-top: 16px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 24px;
+    user-select: none;
+    overflow: hidden;
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* border: 1px dashed black; */
+}
+
+.imageDropper .inside{
+    border: 1px dashed black;
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
