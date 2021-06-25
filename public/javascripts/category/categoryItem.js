@@ -23,7 +23,7 @@ class Item extends React.Component{
     }
 
     delete(){
-        httpRequest('DELETE', `http://${localStorage.serverURL}/categories/delete?apikey=fVKHo9QEUQgWXjQ`, JSON.stringify({
+        httpRequest('DELETE', `${localStorage.http}://${localStorage.serverURL}/categories/delete?apikey=fVKHo9QEUQgWXjQ`, JSON.stringify({
             name:this.props.name
         })).then((val)=>{
             this.setState({exitAnimation:false})
@@ -46,7 +46,7 @@ class Item extends React.Component{
     }
 
     edit(photo){
-        httpRequest('PUT', `http://${localStorage.serverURL}/categories/update?apikey=fVKHo9QEUQgWXjQ`,JSON.stringify({
+        httpRequest('PUT', `${localStorage.http}://${localStorage.serverURL}/categories/update?apikey=fVKHo9QEUQgWXjQ`,JSON.stringify({
             category: this.props.name,
             image: photo,
         })).then((val)=>{
@@ -68,14 +68,19 @@ class Item extends React.Component{
     }
 
     getRSSFeeds(){
-        var req = new XMLHttpRequest();
-        req.open('GET', `http://${localStorage.serverURL}/categories/rssfeed?category=${this.props.name}&apikey=fVKHo9QEUQgWXjQ`, true);
-        req.send();
+        httpRequest('GET', `${localStorage.http}://${localStorage.serverURL}/categories/rssfeed?category=${this.props.name}&apikey=fVKHo9QEUQgWXjQ`).then((val)=>{
+            this.setState({showRSSLinks: true, rss_links: val.data})
+        }).catch((err)=>{
+            alert(`There was an error ${err.message}. Please try again`)
+        })
+        // var req = new XMLHttpRequest();
+        // req.open('GET', `${localStorage.http}://${localStorage.serverURL}/categories/rssfeed?category=${this.props.name}&apikey=fVKHo9QEUQgWXjQ`, true);
+        // req.send();
 
-        req.addEventListener("load", function(){
-            let response = JSON.parse(req.responseText);
-            this.setState({showRSSLinks: true, rss_links:response.data});
-        }.bind(this))
+        // req.addEventListener("load", function(){
+        //     let response = JSON.parse(req.responseText);
+        //     this.setState({showRSSLinks: true, rss_links:response.data});
+        // }.bind(this))
     }
 
     dragging(){
@@ -194,7 +199,7 @@ class ItemList extends React.Component{
             this.props.data.splice(this.state.dragIndex+1, 1);
         }
         for(let i = 0; i < this.props.data.length; i++){
-            await this.sendRequest('PUT', `http://${localStorage.serverURL}/categories/update?apikey=fVKHo9QEUQgWXjQ`, this.props.data[i].name, i+1);
+            await this.sendRequest('PUT', `${localStorage.http}://${localStorage.serverURL}/categories/update?apikey=fVKHo9QEUQgWXjQ`, this.props.data[i].name, i+1);
         }
         this.setState({placeHolder: -1, dragIndex: -1})
         getCategoryData(false);

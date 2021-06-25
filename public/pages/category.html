@@ -52,11 +52,6 @@
         <script type="text/javascript" src="/javascripts/category/addCategory.js"></script>
 
         <script>
-            function temp(a){
-                //a = a?a:null;
-                console.log(a);
-            }
-            temp(undefined);
             window.addEventListener("click", function(e){
                 if(!e.target.classList.contains("menu") && (!e.target.parentElement || !e.target.parentElement.classList.contains("menu"))){
                     let menus = document.getElementsByClassName("hovermenu");
