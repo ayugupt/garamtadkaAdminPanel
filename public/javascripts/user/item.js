@@ -7,12 +7,6 @@ class Item extends React.Component{
         this.state = {exitAnimation: true, editing:false, subAnimation: false, 
             name:this.props.name, phone:this.props.phone, dob:this.props.dob, photo:this.props.photo, bookmarks:[]}
 
-        this.itemColor = "white";
-        if(this.props.index%2 == 0){
-            this.itemColor = "lightgray";
-        }
-        this.state.itemColor = this.itemColor;
-
         this.animTimeout = {itemExit:300, subAppear: 300}
 
         this.optionsRef = React.createRef();
@@ -32,7 +26,7 @@ class Item extends React.Component{
 
     delete(){
         var req = new XMLHttpRequest();
-        req.open('DELETE', `http://${localStorage.serverURL}/user/deleteUser?apikey=fVKHo9QEUQgWXjQ`, true);
+        req.open('DELETE', `${localStorage.http}://${localStorage.serverURL}/user/deleteUser?apikey=fVKHo9QEUQgWXjQ`, true);
         req.setRequestHeader('Content-Type', 'application/json')
         req.send(JSON.stringify({
             user:this.props.id
@@ -48,7 +42,7 @@ class Item extends React.Component{
 
     edit(email, name, phone, dob, photo){
         var req = new XMLHttpRequest();
-        req.open('PUT', `http://${localStorage.serverURL}/user/updateUser/email?apikey=fVKHo9QEUQgWXjQ`, true);
+        req.open('PUT', `${localStorag.http}://${localStorage.serverURL}/user/updateUser/email?apikey=fVKHo9QEUQgWXjQ`, true);
         req.setRequestHeader("Content-Type", "application/json");
         req.send(JSON.stringify({
             email: email,
@@ -65,7 +59,7 @@ class Item extends React.Component{
 
     getBookmarks(){
         var req = new XMLHttpRequest();
-        req.open('GET', `http://${localStorage.serverURL}/user/getBookmarked?user=${this.props.id}&apikey=fVKHo9QEUQgWXjQ`, true);
+        req.open('GET', `${localStorage.http}://${localStorage.serverURL}/user/getBookmarked?user=${this.props.id}&apikey=fVKHo9QEUQgWXjQ`, true);
         req.send();
 
         req.addEventListener("load", function(){
@@ -76,6 +70,13 @@ class Item extends React.Component{
 
 
     render(){
+
+        if(this.props.index%2 == 0){
+            this.state.itemColor = '#e7eaed';
+        }else{
+            this.state.itemColor = 'white';
+        }
+
         return (
         <CSSTransition in={this.state.exitAnimation} 
         classNames="itemAnimation" 

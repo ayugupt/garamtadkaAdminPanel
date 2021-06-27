@@ -3,11 +3,19 @@
     <head>
         <meta charset="UTF-8"/>
         <title>Admin Panel</title>
+
+        <link rel="stylesheet" href="/stylesheets/loginPage/login.css"/>
     </head>
     <body>
-        <input type="text" name="password" id="password"/>
-        <button onClick="password = document.getElementById('password').value;
-        window.location.href = `/pages/category.html?password=${password}`">Enter</button>
+        <div id="pageBody">
+            <div id="formHolder">
+                <img src="/images/logo.svg" width="30%" style="margin-top:20%"/>
+                <img src="/images/Garamtadka.svg" width="80%"/>
+                <input type="text" name="password" id="password" placeholder="Enter the password"/>
+                <button onClick="password = document.getElementById('password').value;
+                window.location.href = `/pages/category.html?password=${password}`" id="loginButton">Enter</button>
+            </div>
+        </div>
         <script type="text/javascript">
             localStorage.serverURL = "api.garamtadka.com";
             localStorage.http = "https";

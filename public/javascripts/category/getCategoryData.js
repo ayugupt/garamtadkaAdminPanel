@@ -1,15 +1,7 @@
-function getCategoryData(isDraggable){
-    var req = new XMLHttpRequest();
-    req.open('GET', `${localStorage.http}://${localStorage.serverURL}/categories?apikey=fVKHo9QEUQgWXjQ`, true);
-    req.send();
-
-    req.addEventListener("load", onLoad);
-
-    function onLoad(){
-        var response = JSON.parse(this.responseText);
-        ReactDOM.render(<ItemList data={response.data} canDrag={isDraggable}/>, document.getElementById("recordsHolder"));
-        addAnimationToIconButtons();
-    }
+async function getCategoryData(isDraggable){
+    let response = await httpRequest('GET', `${localStorage.http}://${localStorage.serverURL}/categories?apikey=fVKHo9QEUQgWXjQ`);
+    ReactDOM.render(<ItemList data={response.data} canDrag={isDraggable}/>, document.getElementById("recordsHolder"));
+    addAnimationToIconButtons();
 }
 
 getCategoryData(false);

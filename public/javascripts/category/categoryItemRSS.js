@@ -25,64 +25,36 @@ class ItemRSS extends React.Component{
                 this.setState({})
             }).catch((err)=>{
                 alert("error in adding link, please refresh and try again");
+                console.log(err);
             })
-        // var req = new XMLHttpRequest();
-        // req.open('PUT', `${localStorage.http}://${localStorage.serverURL}/categories/update?apikey=fVKHo9QEUQgWXjQ`, true);
-        // req.setRequestHeader("Content-Type", "application/json");
-        // req.send(JSON.stringify({
-        //     category:this.props.name,
-        //     rss_feeds:[this.linkRef.current.value],
-        //     notifications: [this.linkNotifRef.current.value]
-        // }))
-
-        // req.addEventListener("load", function(){
-        //     console.log(req.response)
-        //     this.state.rss_links.push({
-        //         rss_link:this.linkRef.current.value,
-        //         category_name:this.props.name,
-        //         notification: this.linkNotifRef.current.value
-        //     })
-        //     this.linkRef.current.value = "";
-        //     this.linkNotifRef.current.value = "0";
-        //     this.setState({})
-        // }.bind(this))
-
     }
 
     updateRSSLink(index, e){
-        var req = new XMLHttpRequest();
-        req.open('PUT', `${localStorage.http}://${localStorage.serverURL}/categories/rssfeed/update?apikey=fVKHo9QEUQgWXjQ`)
-        req.setRequestHeader("Content-Type", "application/json");
-        req.send(JSON.stringify({
+        httpRequest('PUT', `${localStorage.http}://${localStorage.serverURL}/categories/rssfeed/update?apikey=fVKHo9QEUQgWXjQ`, JSON.stringify({
             category: this.props.name,
             link: this.state.rss_links[index]['rss_link'],
-            notification:e.currentTarget.value
-        }))
-
-        let ele = e.currentTarget;
-
-        req.addEventListener("load", function(){
-            this.state.rss_links[index].notification = ele.value;
-        }.bind(this))
-
-        req.addEventListener("error", function(){
-            ele.value = this.state.rss_links[index].notification;
-        }.bind(this))
+            notification:e.target.value
+        })).then((val)=>{
+            console.log(e);
+            this.state.rss_links[index].notification = e.target.value;
+        }).catch((error)=>{
+            e.target.value = this.state.rss_links[index].notification;
+            alert("There was an error, Please try again");
+            console.log(error);
+        })
     }
 
     deleteRSSLink(link, index){
-        var req = new XMLHttpRequest();
-        req.open('DELETE', `${localStorage.http}://${localStorage.serverURL}/categories/rssfeed/delete?apikey=fVKHo9QEUQgWXjQ`);
-        req.setRequestHeader("Content-Type", "application/json");
-        req.send(JSON.stringify({
+        httpRequest('DELETE', `${localStorage.http}://${localStorage.serverURL}/categories/rssfeed/delete?apikey=fVKHo9QEUQgWXjQ`, JSON.stringify({
             category: this.props.name, 
             link: link
-        }))
-
-        req.addEventListener("load", function(){
+        })).then((val)=>{
             this.state.rss_links.splice(index, 1);
             this.setState({})
-        }.bind(this))
+        }).catch((error)=>{
+            alert("There was an error, Please try again");
+            console.log(error);
+        })
     }
 
     render(){

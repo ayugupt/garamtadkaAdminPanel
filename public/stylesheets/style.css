@@ -21,17 +21,18 @@ a {
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  padding: 16px
+  padding: 16px;
+  z-index: 10;
 }
 
 #sideMenu{
   height: 90%;
-  width: 13%;
+  width: 20%;
   display: flex;
   flex-flow: column nowrap;
   position: fixed;
   top: 10%;
-  left: -13%;
+  left: -20%;
   background-color: white;
   z-index: 2;
 }

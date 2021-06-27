@@ -1,60 +1,47 @@
-function addCategory(){
+async function addCategory(){
     if(document.getElementById("droppedImage")){
         formData = new FormData();
         formData.append("categoryImage", document.getElementById("droppedImage").file);
         formData.append("imageType", document.getElementById("droppedImage").file.type.replace("image/", ""))
         formData.append("categoryName", document.getElementById("nameInput").value);
 
-        let localReq = new XMLHttpRequest();
-        localReq.open('POST', '/uploadCategoryImage', true);
-        localReq.send(formData);
+        let response = await httpRequest('POST', '/uploadCategoryImage', formData);
 
-        localReq.addEventListener("load", function(){
-            response = JSON.parse(this.responseText);
-            var req = new XMLHttpRequest();
-            req.open('POST', `http://${localStorage.serverURL}/categories/create?apikey=fVKHo9QEUQgWXjQ`, true)
-            req.setRequestHeader('Content-Type', 'application/json');
-            let name = document.getElementById('nameInput').value;
-            let image = response.imageLink;
-            let priority = document.getElementById('priorityInput').value;
-            let links = document.getElementsByClassName('rsslink');
-            let notifs = document.getElementsByClassName('rssNotification');
-            let rssLinks = [];
-            let notifications = [];
-            for(let link of links){
-                rssLinks.push(link.value);
-            }
-            for(let notif of notifs){
-                notifications.push(notif.value);
-            }
+        let name = document.getElementById('nameInput').value;
+        let image = response.imageLink;
+        let priority = document.getElementById('priorityInput').value;
+        let links = document.getElementsByClassName('rsslink');
+        let notifs = document.getElementsByClassName('rssNotification');
+        let rssLinks = [];
+        let notifications = [];
+        for(let link of links){
+            rssLinks.push(link.value);
+        }
+        for(let notif of notifs){
+            notifications.push(notif.value);
+        }
 
+        await httpRequest('POST', `${localStorage.http}://${localStorage.serverURL}/categories/create?apikey=fVKHo9QEUQgWXjQ`, JSON.stringify({
+            name: name,
+            image: image,
+            priority: priority,
+            rss_feeds: rssLinks,
+            notifications: notifications
+        }))
 
-            req.send(JSON.stringify({
-                name: name,
-                image: image,
-                priority: priority,
-                rss_feeds: rssLinks,
-                notifications: notifications
-            }))
+        document.getElementById("nameInput").value = "";
+        document.getElementById("priorityInput").value = "";
+        let imgDropper = document.querySelector(".imageDropper");
+        imgDropper.children[1].remove();
+        imgDropper.children[0].style.display = "flex";
 
-            req.addEventListener("load", function(){
-                console.log(this.response)
-                document.getElementById("nameInput").value = "";
-                document.getElementById("priorityInput").value = "";
-                let imgDropper = document.querySelector(".imageDropper");
-                imgDropper.children[1].remove();
-                imgDropper.children[0].style.display = "flex";
-
-                let rss = document.getElementsByClassName("rsslink");
-                while(rss.length > 0){
-                    rss[0].parentElement.remove();
-                }
-                document.getElementById('inputHolder').style.display = "none";
-                document.getElementById('addClose').src = "/images/plus.png";
-                getCategoryData(false);
-            })
-        })
-
+        let rss = document.getElementsByClassName("rsslink");
+        while(rss.length > 0){
+            rss[0].parentElement.remove();
+        }
+        document.getElementById('inputHolder').style.display = "none";
+        document.getElementById('addClose').src = "/images/plus.png";
+        getCategoryData(false);
     }
 }
 

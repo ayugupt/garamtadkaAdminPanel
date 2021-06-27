@@ -29,20 +29,8 @@ class Item extends React.Component{
             this.setState({exitAnimation:false})
         }).catch((err)=>{
             alert("There was an error, please refresh and try again")
+            console.log(err);
         })
-        // var req = new XMLHttpRequest();
-        // req.open('DELETE', `http://${localStorage.serverURL}/categories/delete?apikey=fVKHo9QEUQgWXjQ`, true);
-        // req.setRequestHeader('Content-Type', 'application/json')
-        // req.send(JSON.stringify({
-        //     name:this.props.name
-        // }));
-        // req.addEventListener("load", function(){
-        //     this.setState({exitAnimation:false})
-        // }.bind(this))
-
-        // req.addEventListener("error", function(err){
-        //     console.error(error);
-        // })
     }
 
     edit(photo){
@@ -53,18 +41,8 @@ class Item extends React.Component{
             this.setState({editing:false, photo:photo})
         }).catch((err)=>{
             alert("Error in editing, please try again")
+            console.log(err)
         })
-        // var req = new XMLHttpRequest();
-        // req.open('PUT', `http://${localStorage.serverURL}/categories/update?apikey=fVKHo9QEUQgWXjQ`, true);
-        // req.setRequestHeader('Content-Type', 'application/json');
-        // req.send(JSON.stringify({
-        //     category: this.props.name,
-        //     image: photo,
-        // }))
-
-        // req.addEventListener("load", function(){
-        //     this.setState({editing:false, photo:photo})
-        // }.bind(this))
     }
 
     getRSSFeeds(){
@@ -72,15 +50,8 @@ class Item extends React.Component{
             this.setState({showRSSLinks: true, rss_links: val.data})
         }).catch((err)=>{
             alert(`There was an error ${err.message}. Please try again`)
+            console.log(err);
         })
-        // var req = new XMLHttpRequest();
-        // req.open('GET', `${localStorage.http}://${localStorage.serverURL}/categories/rssfeed?category=${this.props.name}&apikey=fVKHo9QEUQgWXjQ`, true);
-        // req.send();
-
-        // req.addEventListener("load", function(){
-        //     let response = JSON.parse(req.responseText);
-        //     this.setState({showRSSLinks: true, rss_links:response.data});
-        // }.bind(this))
     }
 
     dragging(){
@@ -168,28 +139,6 @@ class ItemList extends React.Component{
         return this.state.dragIndex;
     }
 
-    sendRequest(method, url, name, priority){
-        return new Promise(function(resolve, reject){
-            let req = new XMLHttpRequest();
-            req.open(method, url, true);
-            req.setRequestHeader("Content-Type", "application/json");
-            req.onload = function(){
-                resolve(req.responseText);
-            }
-
-            req.onerror = function(){
-                reject({
-                    status: req.status
-                });
-            }
-
-            req.send(JSON.stringify({
-                category:name,
-                priority:priority,
-            }))
-        })
-    }
-
     async drop(){
         if(this.state.placeHolder > this.state.dragIndex){
             this.props.data.splice(this.state.placeHolder+1, 0, this.props.data[this.state.dragIndex]);
@@ -199,7 +148,10 @@ class ItemList extends React.Component{
             this.props.data.splice(this.state.dragIndex+1, 1);
         }
         for(let i = 0; i < this.props.data.length; i++){
-            await this.sendRequest('PUT', `${localStorage.http}://${localStorage.serverURL}/categories/update?apikey=fVKHo9QEUQgWXjQ`, this.props.data[i].name, i+1);
+            await httpRequest('PUT', `${localStorage.http}://${localStorage.serverURL}/categories/update?apikey=fVKHo9QEUQgWXjQ`, JSON.stringify({
+                category:this.props.data[i].name,
+                priority:i+1
+            }));
         }
         this.setState({placeHolder: -1, dragIndex: -1})
         getCategoryData(false);

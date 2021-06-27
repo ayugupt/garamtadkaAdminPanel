@@ -70,12 +70,12 @@ function showSideMenu(){
 function hideSideMenu(){
     var ele = document.getElementById("sideMenu");
     newFunc = function(){
-        if(parseInt(ele.style.left) > -13){
+        if(parseInt(ele.style.left) > -20){
             ele.style.left = (parseInt(ele.style.left) - 1.3).toString() + "%";
             hideSideMenu.bind(this)();
         }else{
             this.ongoing = false;
-            ele.style.left = "-13%";
+            ele.style.left = "-20%";
         }
     }.bind(this);
     window.setTimeout(newFunc, 10);

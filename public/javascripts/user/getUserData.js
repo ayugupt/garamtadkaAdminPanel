@@ -1,5 +1,5 @@
 var req = new XMLHttpRequest();
-req.open('GET', `http://${localStorage.serverURL}/user/getAll?apikey=fVKHo9QEUQgWXjQ`, true);
+req.open('GET', `${localStorage.http}://${localStorage.serverURL}/user/getAll?apikey=fVKHo9QEUQgWXjQ`, true);
 req.send();
 
 req.addEventListener("load", onLoad);

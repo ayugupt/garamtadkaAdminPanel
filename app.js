@@ -41,7 +41,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/pages/category.html', function(req, res, next){
+app.get('/pages/category.html', function(req, res, next){
   if(req.query.password == "garamtadka"){
     next();
   }else{
@@ -64,7 +64,7 @@ app.post('/uploadCategoryImage', upload.single('categoryImage'), async function(
 })
 
 
-app.use('/', function(req, res, next){
+app.get('/', function(req, res, next){
   res.sendFile(path.join(__dirname, "./public/pages/login.html"));
 })
 
