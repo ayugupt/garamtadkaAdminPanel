@@ -12,13 +12,29 @@
                 <img src="/images/logo.svg" width="30%" style="margin-top:20%"/>
                 <img src="/images/Garamtadka.svg" width="80%"/>
                 <input type="text" name="password" id="password" placeholder="Enter the password"/>
-                <button onClick="password = document.getElementById('password').value;
-                window.location.href = `/pages/category.html?password=${password}`" id="loginButton">Enter</button>
+                <button id="loginButton">Enter</button>
             </div>
         </div>
+        <script type="text/javascript" src="/javascripts/request.js"></script>
         <script type="text/javascript">
             localStorage.serverURL = "api.garamtadka.com";
             localStorage.http = "https";
+            sessionStorage.loggedIn = false;
+
+            document.getElementById("loginButton").addEventListener("click", function(){
+                formData = new FormData();
+                formData.append("password", document.getElementById("password").value);
+                httpRequest('POST', '/authenticatePassword', formData).then((val)=>{
+                    if(val.correct){
+                        sessionStorage.loggedIn = true;
+                        window.location.href = '/pages/category.html';
+                    }else{
+                        alert("Wrong password")
+                    }
+                }).catch((err)=>{
+                    alert("error in checking password, please try again later");
+                })
+            })
         </script>
     </body>
 </html>

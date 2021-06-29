@@ -5,6 +5,8 @@
         <title>Admin Panel</title>
 
         <link rel="stylesheet" href="/stylesheets/style.css"/>
+        <link rel="stylesheet" href="/stylesheets/imageDropper.css"/>
+        <link rel="stylesheet" href="/stylesheets/posts/posts.css"/>
 
         <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
@@ -12,6 +14,58 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react-transition-group/4.3.0/react-transition-group.min.js"></script>
     </head>
     <body>
-        
+        <div id="navBar">
+            <div id="leftNav">
+                <div class="iconButton" id="sideMenuButton">
+                    <img src="/images/menu.svg" width="50%" style="user-select: none;"/>
+                </div>
+            </div>
+        </div>
+        <div id="sideMenu">
+            <div class="sideMenuItem">
+                <img src="/images/home.png" height="100%"/>
+                <div style="margin-left: 16px;">Dashboard</div>
+            </div>
+            <div class="sideMenuItem" onClick="window.location.href='/pages/category.html'">
+                <img src="/images/topic.png" height="100%"/>
+                <div style="margin-left: 16px;">Categories</div>
+            </div>
+            <div class="sideMenuItem">
+                <img src="/images/user.png" height="100%"/>
+                <div style="margin-left: 16px;">Users</div>
+            </div>
+            <div class="sideMenuItem" onClick="window.location.href='/pages/post.html'">
+                <img src="/images/newspaper.png" height="100%"/>
+                <div style="margin-left: 16px;">Posts</div>
+            </div>
+        </div>
+        <div id="remainingBody" style="position: relative; top: 11vh; width: 100%; padding: 8px;">
+            <div id="firstWrapper">
+                <div id="titleContent">
+                    <input type="text" id="titleInput" name="titleInput" placeholder="Enter title"/>
+                    <textarea id="contentInput" name="contentInput" placeholder="Enter description" maxlength="1000"></textarea>
+                </div>
+                <div class="imageDropper" style="height: 400px; width: 800px; flex-grow: 1; flex-shrink: 0; flex-basis: auto; margin-top: 0;
+                background-color: white; box-shadow: 1px 1px 3px 1px gray;"><div class="inside" style="background-color: lightgray;"><span>Drag&Drop Image Here</span></div></div>
+            </div>
+            <div id="categories">
+                <div id="allCategories"></div>
+                <select id="categoriesSelection">
+                    <option value=null>Add Category</option>
+                </select>
+            </div>
+            <div id="restInput">
+                <input type="text" name="creator" id="creatorInput" class="consInput" placeholder="Enter creator"/>
+                <input type="text" name="link" id="linkInput" class="consInput" placeholder="Enter Link of the article"/>
+                <input type="text" name="date" id="dateInput" class="consInput" placeholder="Enter publish date of article"/>
+                <button id="postButton" onClick="addPost()">Submit</button>
+            </div>
+        </div>
+        <script type="text/javascript" src="/javascripts/request.js"></script>
+        <script type="text/javascript" src="/javascripts/iconButton.js"></script>
+        <script type="text/javascript" src="/javascripts/category/addCategory.js"></script>
+        <script type="text/javascript" src="/javascripts/post/getCategories.js"></script>
+        <script type="text/babel" src="/javascripts/post/addCategoryToPost.js"></script>
+        <script type="text/babel" src="/javascripts/post/addPost.js"></script>
     </body>
 </html>

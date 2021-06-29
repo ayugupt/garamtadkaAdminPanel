@@ -117,7 +117,6 @@ imageDrop.addEventListener("dragover", function(event){
 imageDrop.addEventListener("drop", function(event){
     event.preventDefault();
     let file = event.dataTransfer.files[0];
-    console.log(file)
     if(!file.type.startsWith('image/')){
         alert("Please drop an image")
     }else{

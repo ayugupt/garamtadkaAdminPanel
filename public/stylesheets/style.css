@@ -35,6 +35,27 @@ a {
   left: -20%;
   background-color: white;
   z-index: 2;
+  padding: 8px;
+  padding-top: 32px;
+  font-size: 20px;
+}
+
+.sideMenuItem{
+  display: flex;
+  width: 100%;
+  height: 25px;
+  align-items:flex-end;
+  padding-left: 8px;
+  margin-bottom: 32px;
+  user-select: none;
+  cursor: pointer;
+  color: black;
+  transition: color 0.1s linear;
+  font-weight: 500;
+}
+
+.sideMenuItem:hover{
+  color: #3f5eef;
 }
 
 .iconButton{

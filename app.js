@@ -13,6 +13,7 @@ const AWS = require('aws-sdk');
 const fs = require('fs');
 const util = require('util');
 var path = require('path');
+dateParser = require('./dateParser.js')
 
 AWS.config.update({
     accessKeyId: "AKIAQ62ZT6HUDBUOSMUZ",
@@ -41,15 +42,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.get('/pages/category.html', function(req, res, next){
-  if(req.query.password == "garamtadka"){
-    next();
-  }else{
-    res.status(403).send({
-      message:"wrong password"
-    })
-  }
+app.get('/', function(req, res, next){
+  res.sendFile(path.join(__dirname, "./public/pages/login.html"));
 })
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -63,10 +59,34 @@ app.post('/uploadCategoryImage', upload.single('categoryImage'), async function(
   })
 })
 
-
-app.get('/', function(req, res, next){
-  res.sendFile(path.join(__dirname, "./public/pages/login.html"));
+app.post('/uploadNewsImage', upload.single('image'), async function(req, res){
+  params.Body = fs.createReadStream(path.join(__dirname, `./uploads/${req.file.filename}`));
+  let parsedDate = dateParser(new Date());
+  params.Key = `news/${parsedDate.date}/${parsedDate.time + "_manual"}.${req.body.imageType}`;
+  let uploadResult = await s3Actions.upload(params);
+  res.send({message:"Successful", imageLink:uploadResult.Location});
+  fs.unlink(path.join(__dirname, `./uploads/${req.file.filename}`), function(){
+    console.log("deleted")
+  })
 })
+
+app.post('/authenticatePassword', upload.none(),async function(req, res){
+  console.log(req.body)
+  if(req.body.password == 'garamtadka'){
+    res.status(200).send({
+      message:"correct password",
+      correct: true
+    })
+  }else{
+    res.status(200).send({
+      message:"Wrong password",
+      correct: false
+    })
+  }
+})
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

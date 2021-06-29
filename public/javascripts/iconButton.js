@@ -14,6 +14,8 @@ function addAnimationToIconButtons(){
     }
 }
 
+addAnimationToIconButtons();
+
 function addAnimationToIconButton(ele){
     ele.addEventListener("mousedown", function(event){
         if(event.target == event.currentTarget || event.currentTarget == event.target.parentNode)
