@@ -1,0 +1,76 @@
+#variables{
+    margin: auto;
+    width: 95%;
+    border-radius: 10px;
+    box-shadow: 1px 1px 3px 1px gray;
+    padding: 16px;
+    background-color: white;
+    margin-top: 16px;
+    margin-bottom: 16px; 
+}
+
+#container{
+    width: 100%;
+    border: 1px dashed black;
+}
+
+.cell{
+    padding: 8px;
+    height: 70px;
+    width: 300px;
+    display: flex;
+    align-items: center;
+    border-right: 2px solid black;
+    border-bottom: 2px solid black;
+    justify-content: space-between;
+    flex-shrink: 0;
+    flex-grow: 0;
+    flex-basis: auto;
+}
+
+.header{
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.left{
+    justify-content: flex-end;
+}
+
+.top{
+    align-items: flex-end;
+    justify-content: start;
+}
+
+#variablesTableHolder{
+    display: flex;
+}
+
+#variableHeaders{
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+#rowHolder{
+    display: flex;
+    flex-flow: column nowrap;
+    overflow-x: scroll;
+    background-color: aliceblue;
+    flex-grow: 1;
+    flex-basis: auto;
+    flex-shrink: 1;
+}
+
+.valueRow{
+    display: flex;
+}
+
+.valueEditButton{
+    font-size: 0.8em;
+    height: 20px;
+    width: 40px;
+}
+
+.valueInput{
+    width: 80%;
+}

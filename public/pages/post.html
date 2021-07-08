@@ -30,9 +30,9 @@
                 <img src="/images/topic.png" height="100%"/>
                 <div style="margin-left: 16px;">Categories</div>
             </div>
-            <div class="sideMenuItem">
+            <div class="sideMenuItem" onClick="window.location.href='/pages/language.html'">
                 <img src="/images/user.png" height="100%"/>
-                <div style="margin-left: 16px;">Users</div>
+                <div style="margin-left: 16px;">Languages & Variables</div>
             </div>
             <div class="sideMenuItem" onClick="window.location.href='/pages/post.html'">
                 <img src="/images/newspaper.png" height="100%"/>
@@ -51,20 +51,23 @@
             <div id="categories">
                 <div id="allCategories"></div>
                 <select id="categoriesSelection">
-                    <option value=null>Add Category</option>
                 </select>
             </div>
             <div id="restInput">
                 <input type="text" name="creator" id="creatorInput" class="consInput" placeholder="Enter creator"/>
                 <input type="text" name="link" id="linkInput" class="consInput" placeholder="Enter Link of the article"/>
                 <input type="text" name="date" id="dateInput" class="consInput" placeholder="Enter publish date of article"/>
-                <button id="postButton" onClick="addPost()">Submit</button>
+                <div style="display: flex; align-items: center;">
+                    <select id="languageSelector" onChange="getCategoriesFromLanguage(event.target.value);"></select>
+                    <button id="postButton" onClick="addPost()">Submit</button>
+                </div>
             </div>
         </div>
         <script type="text/javascript" src="/javascripts/request.js"></script>
         <script type="text/javascript" src="/javascripts/iconButton.js"></script>
         <script type="text/javascript" src="/javascripts/category/addCategory.js"></script>
-        <script type="text/javascript" src="/javascripts/post/getCategories.js"></script>
+
+        <script type="text/javascript" src="/javascripts/post/getCategoriesAndLanguages.js"></script>
         <script type="text/babel" src="/javascripts/post/addCategoryToPost.js"></script>
         <script type="text/babel" src="/javascripts/post/addPost.js"></script>
     </body>

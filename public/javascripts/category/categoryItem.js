@@ -1,30 +1,15 @@
 const CSSTransition = ReactTransitionGroup.CSSTransition;
 
-class Item extends React.Component{
+class ItemFromTemplate extends ItemTemplate{
     constructor(props){
         super(props);
-        this.props = props;
-        this.state = {exitAnimation: true, editing:false, showRSSLinks: false, 
-            photo:this.props.photo, rss_links:[]}
 
-        this.animTimeout = {itemExit:300}
-
-        this.optionsRef = React.createRef();
-        this.photoRef = React.createRef();
-        this.mainRef = React.createRef();
+        this.state.rss_links = [];
     }
 
-    showOptions(){
-        let menus = document.getElementsByClassName("hovermenu");
-        for(var menu of menus){
-            menu.style.display = "none";
-        }
-        this.optionsRef.current.style.display = "flex";
-    }
-
-    delete(){
+    deleteItem(){
         httpRequest('DELETE', `${localStorage.http}://${localStorage.serverURL}/categories/delete?apikey=fVKHo9QEUQgWXjQ`, JSON.stringify({
-            name:this.props.name
+            category:this.props.staticAttributes.id
         })).then((val)=>{
             this.setState({exitAnimation:false})
         }).catch((err)=>{
@@ -33,21 +18,22 @@ class Item extends React.Component{
         })
     }
 
-    edit(photo){
+    editItem(values){
         httpRequest('PUT', `${localStorage.http}://${localStorage.serverURL}/categories/update?apikey=fVKHo9QEUQgWXjQ`,JSON.stringify({
-            category: this.props.name,
-            image: photo,
+            category: this.props.staticAttributes.id,
+            image: values.photo,
         })).then((val)=>{
-            this.setState({editing:false, photo:photo})
+            values.editing = false;
+            this.setState(values)
         }).catch((err)=>{
             alert("Error in editing, please try again")
             console.log(err)
         })
     }
 
-    getRSSFeeds(){
-        httpRequest('GET', `${localStorage.http}://${localStorage.serverURL}/categories/rssfeed?category=${this.props.name}&apikey=fVKHo9QEUQgWXjQ`).then((val)=>{
-            this.setState({showRSSLinks: true, rss_links: val.data})
+    getAdditionalInfo(){
+        httpRequest('GET', `${localStorage.http}://${localStorage.serverURL}/categories/rssfeed?category=${this.props.staticAttributes.id}&apikey=fVKHo9QEUQgWXjQ`).then((val)=>{
+            this.setState({showAdditionalInfo: true, rss_links: val.data})
         }).catch((err)=>{
             alert(`There was an error ${err.message}. Please try again`)
             console.log(err);
@@ -55,11 +41,11 @@ class Item extends React.Component{
     }
 
     dragging(){
-        this.props.setDrag(this.props.index);
+        this.props.setDrag(this.props.staticAttributes.index);
     }
 
     dragOver(e){
-        if(this.props.getDrag() != -1) this.props.replaceFunc(this.props.index);
+        if(this.props.getDrag() != -1) this.props.replaceFunc(this.props.staticAttributes.index);
     }
 
     dragEnd(){
@@ -67,58 +53,32 @@ class Item extends React.Component{
     }
 
     render(){
+        
+        this.reRenderComponents();
 
-        if(this.props.index%2 == 0){
-            this.state.itemColor = '#e7eaed';
-        }else{
-            this.state.itemColor = 'white';
-        }
-
-        return (
-        <CSSTransition in={this.state.exitAnimation} 
+        return <CSSTransition in={this.state.exitAnimation} 
         classNames="itemAnimation" 
         timeout={this.animTimeout.itemExit} 
         onExited={this.props.func}
         >
                 {!this.state.editing?<div onDragStart={(event)=>this.dragging(event)} onDragOver={(event)=>this.dragOver(event)} onDragEnd={(event)=>this.dragEnd(event)} draggable={this.props.canDrag}>
-                    <div className="item" style={{backgroundColor:this.state.itemColor}}>
-                        <div className="attribute">{this.props.index+1}</div>
-                        <div className="attribute">{this.props.name}</div>
-                        <div className="attribute">{this.state.photo}</div>
-                        <div className="iconButton menu" onClick={this.showOptions.bind(this)} style={{position: "relative"}}>
-                            <img src="/images/more.svg" style={{width:"50%"}}/>
-                            <div className="hovermenu" ref={this.optionsRef}>
-                                <div style={{marginBottom: "8px", cursor:"pointer"}} onClick={this.delete.bind(this)}>Delete</div>
-                                <div style={{marginBottom: "8px", cursor:"pointer"}} onClick={()=>{this.setState({editing:true})}}>Edit</div>
-                                <div style={{cursor:"pointer"}} onClick={()=>{!this.state.showRSSLinks?this.getRSSFeeds():this.setState({showRSSLinks:false})}}>View RSS feeds</div>
-                            </div>
-                        </div>
-                    </div>
                     {
-                        !this.state.showRSSLinks?null:
-                        <ItemRSS data={this.state.rss_links} name={this.props.name}/>
+                        this.mainItem
+                    }
+                    {
+                        !this.state.showAdditionalInfo?null:
+                        <ItemRSS data={this.state.rss_links} id={this.props.staticAttributes.id}/>
                     }
                 </div>
-                :
-                <div className="item" style={{backgroundColor:this.state.itemColor}}>
-                    <div className="attribute">{this.props.index+1}</div>
-                    <div className="attribute">{this.props.name}</div>
-                    <div className="attribute"><input type="text" name="photo" defaultValue={this.state.photo} ref={this.photoRef} className="attInput"/></div>
-                    <div style={{display:"flex", flexDirection:"column", width:"50px", height:"50px", justifyContent:"space-between"}}>
-                        <button onClick={()=>{this.edit(this.photoRef.current.value)}} style={{width:"100%", height:"45%", fontSize:"12px"}}>Done</button>
-                        <button onClick={()=>{this.setState({editing:false})}} style={{width:"100%", height:"45%", fontSize:"12px"}}>Cancel</button>
-                    </div>
-                </div>
+                :this.editableItem
                 }
             </CSSTransition>
-        );
     }
 }
 
-class ItemList extends React.Component{
+class ItemListFromTemplate extends ItemListTemplate{
     constructor(props){
         super(props);
-        this.props = props;
         this.state = {placeHolder: -1, dragIndex:-1};
     }
 
@@ -149,12 +109,12 @@ class ItemList extends React.Component{
         }
         for(let i = 0; i < this.props.data.length; i++){
             await httpRequest('PUT', `${localStorage.http}://${localStorage.serverURL}/categories/update?apikey=fVKHo9QEUQgWXjQ`, JSON.stringify({
-                category:this.props.data[i].name,
+                category:this.props.data[i].id,
                 priority:i+1
             }));
         }
         this.setState({placeHolder: -1, dragIndex: -1})
-        getCategoryData(false);
+        getCategoryData(false, document.getElementById("languageSelect").value);
     }
 
     render(){
@@ -164,7 +124,7 @@ class ItemList extends React.Component{
             if(i == this.state.placeHolder && this.state.dragIndex > i){
                 items.push(<div style={{height:"66px"}} key="temp" onDragOver={(event)=>event.preventDefault()} onDrop={this.drop.bind(this)}></div>);
             }
-            items.push(<Item index={i} name={data[i].name} photo={data[i].image} func={this.removeFromList.bind(this, i)} replaceFunc={this.putPlaceholder.bind(this)} setDrag={this.setDragIndex.bind(this)} canDrag={this.props.canDrag} getDrag={this.getDragIndex.bind(this)} key={data[i].name}/>);
+            items.push(<ItemFromTemplate staticAttributes={{index:i, name:data[i].name, id:data[i].id}} editableAttributes={{photo:data[i].image}} func={this.removeFromList.bind(this, i)} replaceFunc={this.putPlaceholder.bind(this)} setDrag={this.setDragIndex.bind(this)} getDrag={this.getDragIndex.bind(this)} canDrag={this.props.canDrag} key={data[i].name}/>);
             if(i == this.state.placeHolder && this.state.dragIndex < i){
                 items.push(<div style={{height:"66px"}} key="temp" onDragOver={(event)=>event.preventDefault()} onDrop={this.drop.bind(this)}></div>);
             }

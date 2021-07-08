@@ -13,11 +13,11 @@ class ItemRSS extends React.Component{
     }
 
     addRSSLink(){
-        httpRequest('PUT', `${localStorage.http}://${localStorage.serverURL}/categories/update?apikey=fVKHo9QEUQgWXjQ`, JSON.stringify({category:this.props.name,
+        httpRequest('PUT', `${localStorage.http}://${localStorage.serverURL}/categories/update?apikey=fVKHo9QEUQgWXjQ`, JSON.stringify({category:this.props.id,
             rss_feeds: [this.linkRef.current.value], notifications: [this.linkNotifRef.current.value]})).then((val)=>{
                 this.state.rss_links.push({
                     rss_link:this.linkRef.current.value,
-                    category_name:this.props.name,
+                    category_id:this.props.id,
                     notification: this.linkNotifRef.current.value
                 })
                 this.linkRef.current.value = "";
@@ -31,7 +31,7 @@ class ItemRSS extends React.Component{
 
     updateRSSLink(index, e){
         httpRequest('PUT', `${localStorage.http}://${localStorage.serverURL}/categories/rssfeed/update?apikey=fVKHo9QEUQgWXjQ`, JSON.stringify({
-            category: this.props.name,
+            category: this.props.id,
             link: this.state.rss_links[index]['rss_link'],
             notification:e.target.value
         })).then((val)=>{
@@ -46,7 +46,7 @@ class ItemRSS extends React.Component{
 
     deleteRSSLink(link, index){
         httpRequest('DELETE', `${localStorage.http}://${localStorage.serverURL}/categories/rssfeed/delete?apikey=fVKHo9QEUQgWXjQ`, JSON.stringify({
-            category: this.props.name, 
+            category: this.props.id, 
             link: link
         })).then((val)=>{
             this.state.rss_links.splice(index, 1);

@@ -6,6 +6,6 @@ req.addEventListener("load", onLoad);
 
 function onLoad(){
     var response = JSON.parse(this.responseText);
-    ReactDOM.render(<ItemList userData={response.data}/>, document.getElementById("recordsHolder"));
+    ReactDOM.render(<UserItemList userData={response.data}/>, document.getElementById("recordsHolder"));
     addAnimationToIconButtons();
 }

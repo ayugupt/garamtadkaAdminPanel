@@ -1,17 +1,23 @@
 async function addPost(){
     let img = document.getElementById("droppedImage");
     if(img){
-        formData = new FormData();
+        let formData = new FormData();
         formData.append("image", img.file);
         formData.append("imageType", img.file.type.replace("image/", ""));
 
         let result = await httpRequest('POST', '/uploadNewsImage', formData);
 
-        title = document.getElementById("titleInput").value;
-        content = document.getElementById("contentInput").value;
-        creator = document.getElementById("creatorInput").value;
-        pubDate = document.getElementById("dateInput").value;
-        link = document.getElementById("linkInput").value;
+        let title = document.getElementById("titleInput").value;
+        let content = document.getElementById("contentInput").value;
+        let creator = document.getElementById("creatorInput").value;
+        let pubDate = document.getElementById("dateInput").value;
+        let link = document.getElementById("linkInput").value;
+        let language = document.getElementById("languageSelector").value;
+
+        let categoriesOfPost = [];
+        for(let q of categoriesList){
+            categoriesOfPost.push(q.id);
+        }
         
         await httpRequest('POST', `${localStorage.http}://${localStorage.serverURL}/news/create?apikey=fVKHo9QEUQgWXjQ`, JSON.stringify({
             title:title,
@@ -20,7 +26,8 @@ async function addPost(){
             creator:creator,
             pubDate:pubDate,
             link:link,
-            categories: categoriesList
+            categories: categoriesOfPost,
+            language: language
         }));
 
         document.getElementById("titleInput").value = "";

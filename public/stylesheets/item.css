@@ -8,6 +8,7 @@
     border-bottom: 1px solid black;
     border-left: 1px solid black;
     border-right: 1px solid black;
+    
 }
   
 .attribute{
@@ -17,7 +18,9 @@
     display: flex;
     width: 10%;
     align-items: center;
-    word-break: break-all;
+    /* word-break: break-all; */
+    overflow-x: hidden;
+    overflow-y: hidden;
     padding-left: 8px;
 }
 

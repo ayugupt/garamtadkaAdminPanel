@@ -42,10 +42,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.get('/', function(req, res, next){
-  res.sendFile(path.join(__dirname, "./public/pages/login.html"));
+app.get('/', function(req, res){
+  res.sendFile(path.join(__dirname, './public/pages/login.html'));
 })
 
+app.use(function(req, res, next){
+  if(req.cookies.isLoggedIn || !req.url.includes("pages")){
+    next();
+  }else{
+    res.status(403).send({
+      message:"Not Logged In",
+    })
+  }
+})
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -70,9 +79,21 @@ app.post('/uploadNewsImage', upload.single('image'), async function(req, res){
   })
 })
 
+app.post('/uploadLanguageImage', upload.single('languageImage'), async function(req, res){
+  params.Body = fs.createReadStream(path.join(__dirname, `./uploads/${req.file.filename}`));
+  params.Key = `languages/${req.body.languageName}.${req.body.imageType}`;
+  let uploadResult = await s3Actions.upload(params);
+  res.send({message:"Successful", imageLink:uploadResult.Location});
+  fs.unlink(path.join(__dirname, `./uploads/${req.file.filename}`), function(){
+    console.log("deleted")
+  })
+})
+
+
 app.post('/authenticatePassword', upload.none(),async function(req, res){
   console.log(req.body)
   if(req.body.password == 'garamtadka'){
+    res.cookie('isLoggedIn', true);
     res.status(200).send({
       message:"correct password",
       correct: true

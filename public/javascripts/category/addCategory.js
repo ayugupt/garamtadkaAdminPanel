@@ -12,6 +12,7 @@ async function addCategory(){
         let priority = document.getElementById('priorityInput').value;
         let links = document.getElementsByClassName('rsslink');
         let notifs = document.getElementsByClassName('rssNotification');
+        let languageID = document.getElementById("languageSelect").value;
         let rssLinks = [];
         let notifications = [];
         for(let link of links){
@@ -26,7 +27,8 @@ async function addCategory(){
             image: image,
             priority: priority,
             rss_feeds: rssLinks,
-            notifications: notifications
+            notifications: notifications,
+            language_id: languageID
         }))
 
         document.getElementById("nameInput").value = "";
@@ -41,7 +43,7 @@ async function addCategory(){
         }
         document.getElementById('inputHolder').style.display = "none";
         document.getElementById('addClose').src = "/images/plus.png";
-        getCategoryData(false);
+        getCategoryData(false, languageID);
     }
 }
 

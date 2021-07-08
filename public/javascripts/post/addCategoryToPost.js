@@ -1,8 +1,17 @@
 var categoriesList = [];
 
 document.getElementById("categoriesSelection").addEventListener("change", function(){
-    if(!categoriesList.includes(this.value)){
-        categoriesList.push(this.value);
+    let name = this.options[this.selectedIndex].innerHTML;
+    let isInList = false;
+    for(var c of categoriesList){
+        if(c.id == this.value){
+            isInList = true;
+            break;
+        }
+    }
+
+    if(!isInList){
+        categoriesList.push({id:this.value, name:name});
         ReactDOM.render(<CategoryList categories={categoriesList}/>, document.getElementById("allCategories"));
     }
     this.value = null;
@@ -26,7 +35,12 @@ function Category(props){
 
 function CategoryList(props){
     const catLi = props.categories.map((val, index)=>{
-        return <Category name={val} index={index} key={val}/>
+        return <Category name={val.name} index={index} key={val.id}/>
     })
     return <div id="categoryList">{catLi}</div>;
 }
+
+document.getElementById("languageSelector").addEventListener("change", function(){
+    categoriesList = [];
+    ReactDOM.render(<CategoryList categories={categoriesList}/>, document.getElementById("allCategories"));
+})
