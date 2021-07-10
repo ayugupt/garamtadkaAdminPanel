@@ -5,7 +5,7 @@ async function addLanguage(){
         formData.append("imageType", document.getElementById("droppedImage").file.type.replace("image/", ""))
         formData.append("languageName", document.getElementById("englishInput").value);
 
-        let response = await httpRequest('POST', '/uploadLanguageImage', formData);
+        let response = await httpRequest('POST', `${localStorage.http}://${localStorage.serverURL}/upload/languagesImage?apikey=fVKHo9QEUQgWXjQ`, formData);
 
         let englishName = document.getElementById('englishInput').value;
         let nativeName = document.getElementById('nativeInput').value;

@@ -9,29 +9,28 @@ var upload = multer({dest:'uploads/'});
 
 var app = express();
 
-const AWS = require('aws-sdk');
 const fs = require('fs');
 const util = require('util');
 var path = require('path');
 dateParser = require('./dateParser.js')
 
-AWS.config.update({
-    accessKeyId: "AKIAQ62ZT6HUDBUOSMUZ",
-    secretAccessKey: "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"
-})
+// const AWS = require('aws-sdk');
+// AWS.config.update({
+//     accessKeyId: "AKIAQ62ZT6HUDBUOSMUZ",
+//     secretAccessKey: "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"
+// })
 
-var s3 = new AWS.S3();
+// var s3 = new AWS.S3();
 
-var params = {
-  Bucket: "garamtadka",
-}
+// var params = {
+//   Bucket: "garamtadka",
+// }
 
-const s3Actions = {
-  upload: (config)=>{
-      return util.promisify(s3.upload).call(s3, config);
-  }
-}
-
+// const s3Actions = {
+//   upload: (config)=>{
+//       return util.promisify(s3.upload).call(s3, config);
+//   }
+// }
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -58,36 +57,36 @@ app.use(function(req, res, next){
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.post('/uploadCategoryImage', upload.single('categoryImage'), async function(req, res){
-  params.Body = fs.createReadStream(path.join(__dirname, `./uploads/${req.file.filename}`));
-  params.Key = `categories/${req.body.categoryName}.${req.body.imageType}`;
-  let uploadResult = await s3Actions.upload(params);
-  res.send({message:"Successful", imageLink:uploadResult.Location});
-  fs.unlink(path.join(__dirname, `./uploads/${req.file.filename}`), function(){
-    console.log("deleted")
-  })
-})
+// app.post('/uploadCategoryImage', upload.single('categoryImage'), async function(req, res){
+//   params.Body = fs.createReadStream(path.join(__dirname, `./uploads/${req.file.filename}`));
+//   params.Key = `categories/${req.body.categoryName}.${req.body.imageType}`;
+//   let uploadResult = await s3Actions.upload(params);
+//   res.send({message:"Successful", imageLink:uploadResult.Location});
+//   fs.unlink(path.join(__dirname, `./uploads/${req.file.filename}`), function(){
+//     console.log("deleted")
+//   })
+// })
 
-app.post('/uploadNewsImage', upload.single('image'), async function(req, res){
-  params.Body = fs.createReadStream(path.join(__dirname, `./uploads/${req.file.filename}`));
-  let parsedDate = dateParser(new Date());
-  params.Key = `news/${parsedDate.date}/${parsedDate.time + "_manual"}.${req.body.imageType}`;
-  let uploadResult = await s3Actions.upload(params);
-  res.send({message:"Successful", imageLink:uploadResult.Location});
-  fs.unlink(path.join(__dirname, `./uploads/${req.file.filename}`), function(){
-    console.log("deleted")
-  })
-})
+// app.post('/uploadNewsImage', upload.single('image'), async function(req, res){
+//   params.Body = fs.createReadStream(path.join(__dirname, `./uploads/${req.file.filename}`));
+//   let parsedDate = dateParser(new Date());
+//   params.Key = `news/${parsedDate.date}/${parsedDate.time + "_manual"}.${req.body.imageType}`;
+//   let uploadResult = await s3Actions.upload(params);
+//   res.send({message:"Successful", imageLink:uploadResult.Location});
+//   fs.unlink(path.join(__dirname, `./uploads/${req.file.filename}`), function(){
+//     console.log("deleted")
+//   })
+// })
 
-app.post('/uploadLanguageImage', upload.single('languageImage'), async function(req, res){
-  params.Body = fs.createReadStream(path.join(__dirname, `./uploads/${req.file.filename}`));
-  params.Key = `languages/${req.body.languageName}.${req.body.imageType}`;
-  let uploadResult = await s3Actions.upload(params);
-  res.send({message:"Successful", imageLink:uploadResult.Location});
-  fs.unlink(path.join(__dirname, `./uploads/${req.file.filename}`), function(){
-    console.log("deleted")
-  })
-})
+// app.post('/uploadLanguageImage', upload.single('languageImage'), async function(req, res){
+//   params.Body = fs.createReadStream(path.join(__dirname, `./uploads/${req.file.filename}`));
+//   params.Key = `languages/${req.body.languageName}.${req.body.imageType}`;
+//   let uploadResult = await s3Actions.upload(params);
+//   res.send({message:"Successful", imageLink:uploadResult.Location});
+//   fs.unlink(path.join(__dirname, `./uploads/${req.file.filename}`), function(){
+//     console.log("deleted")
+//   })
+// })
 
 
 app.post('/authenticatePassword', upload.none(),async function(req, res){

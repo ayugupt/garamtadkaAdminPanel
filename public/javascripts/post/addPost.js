@@ -5,7 +5,7 @@ async function addPost(){
         formData.append("image", img.file);
         formData.append("imageType", img.file.type.replace("image/", ""));
 
-        let result = await httpRequest('POST', '/uploadNewsImage', formData);
+        let result = await httpRequest('POST', `${localStorage.http}://${localStorage.serverURL}/upload/newsImage?apikey=fVKHo9QEUQgWXjQ`, formData);
 
         let title = document.getElementById("titleInput").value;
         let content = document.getElementById("contentInput").value;

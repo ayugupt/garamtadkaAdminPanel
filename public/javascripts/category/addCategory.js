@@ -5,7 +5,7 @@ async function addCategory(){
         formData.append("imageType", document.getElementById("droppedImage").file.type.replace("image/", ""))
         formData.append("categoryName", document.getElementById("nameInput").value);
 
-        let response = await httpRequest('POST', '/uploadCategoryImage', formData);
+        let response = await httpRequest('POST', `${localStorage.http}://${localStorage.serverURL}/upload/categoriesImage?apikey=fVKHo9QEUQgWXjQ`, formData);
 
         let name = document.getElementById('nameInput').value;
         let image = response.imageLink;
