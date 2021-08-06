@@ -20,7 +20,7 @@ function getCategoriesFromLanguage(language){
 
 httpRequest('GET', `${localStorage.http}://${localStorage.serverURL}/language?apikey=fVKHo9QEUQgWXjQ`).then((val)=>{
     var selector = document.getElementById("languageSelector");
-    let englishOption;
+    let englishOption = val.data[0];
     for(var languageObject of val.data){
         if(languageObject['name_english'] == languageObject['name_native']) englishOption = languageObject;
 

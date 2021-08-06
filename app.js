@@ -1,16 +1,19 @@
+require('dotenv').config()
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const got = require('got')
 
 const multer = require('multer');
 var upload = multer({dest:'uploads/'});
+var FormData = require('form-data')
 
 var app = express();
 
-const fs = require('fs');
-const util = require('util');
+// const fs = require('fs');
+// const util = require('util');
 var path = require('path');
 dateParser = require('./dateParser.js')
 
@@ -45,6 +48,35 @@ app.get('/', function(req, res){
   res.sendFile(path.join(__dirname, './public/pages/login.html'));
 })
 
+app.post('/authenticatePassword', upload.none(), async function(req, res){
+  try{
+    let form = new FormData();
+    form.append("password", req.body.password)
+    let auth = await got.post(`${process.env.SERVERADDRESS}/authenticateAdminPassword`, {
+      body: form,
+      responseType:"json"
+    })
+
+    if(auth.body.valid){
+      res.cookie('isLoggedIn', true);
+      res.status(200).send({
+        message:auth.body.message,
+        correct: true
+      })
+    }else{
+      res.status(200).send({
+        correct: false,
+        message:auth.body.message
+      })
+    } 
+  }catch(error){
+    res.status(400).send({
+      message: error,
+      correct: false
+    })
+  }
+})
+
 app.use(function(req, res, next){
   if(req.cookies.isLoggedIn || !req.url.includes("pages")){
     next();
@@ -56,56 +88,6 @@ app.use(function(req, res, next){
 })
 
 app.use(express.static(path.join(__dirname, 'public')));
-
-// app.post('/uploadCategoryImage', upload.single('categoryImage'), async function(req, res){
-//   params.Body = fs.createReadStream(path.join(__dirname, `./uploads/${req.file.filename}`));
-//   params.Key = `categories/${req.body.categoryName}.${req.body.imageType}`;
-//   let uploadResult = await s3Actions.upload(params);
-//   res.send({message:"Successful", imageLink:uploadResult.Location});
-//   fs.unlink(path.join(__dirname, `./uploads/${req.file.filename}`), function(){
-//     console.log("deleted")
-//   })
-// })
-
-// app.post('/uploadNewsImage', upload.single('image'), async function(req, res){
-//   params.Body = fs.createReadStream(path.join(__dirname, `./uploads/${req.file.filename}`));
-//   let parsedDate = dateParser(new Date());
-//   params.Key = `news/${parsedDate.date}/${parsedDate.time + "_manual"}.${req.body.imageType}`;
-//   let uploadResult = await s3Actions.upload(params);
-//   res.send({message:"Successful", imageLink:uploadResult.Location});
-//   fs.unlink(path.join(__dirname, `./uploads/${req.file.filename}`), function(){
-//     console.log("deleted")
-//   })
-// })
-
-// app.post('/uploadLanguageImage', upload.single('languageImage'), async function(req, res){
-//   params.Body = fs.createReadStream(path.join(__dirname, `./uploads/${req.file.filename}`));
-//   params.Key = `languages/${req.body.languageName}.${req.body.imageType}`;
-//   let uploadResult = await s3Actions.upload(params);
-//   res.send({message:"Successful", imageLink:uploadResult.Location});
-//   fs.unlink(path.join(__dirname, `./uploads/${req.file.filename}`), function(){
-//     console.log("deleted")
-//   })
-// })
-
-
-app.post('/authenticatePassword', upload.none(),async function(req, res){
-  console.log(req.body)
-  if(req.body.password == 'garamtadka'){
-    res.cookie('isLoggedIn', true);
-    res.status(200).send({
-      message:"correct password",
-      correct: true
-    })
-  }else{
-    res.status(200).send({
-      message:"Wrong password",
-      correct: false
-    })
-  }
-})
-
-
 
 
 // catch 404 and forward to error handler

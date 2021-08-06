@@ -1,0 +1,34 @@
+#newsDataHolder{
+    display: flex;
+    width: 100%;
+    height: 500px;
+    margin-bottom: 28px;
+}
+
+#newsGraphHolder{
+
+}
+
+#newsPointer{
+    border: 2px solid rgba(0, 240, 253, 1);
+    background-color: rgba(0, 166, 181, 1);
+}
+
+#newsDate{
+    margin-bottom: 8px;
+}
+
+#countNews{
+    margin-bottom: 8px;
+}
+
+#numberNews{
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+#inDeNews{
+    font-size: 1.3em;
+    font-weight: bold;
+}

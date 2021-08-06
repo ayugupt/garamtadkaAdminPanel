@@ -19,7 +19,6 @@
         <script type="text/javascript">
             localStorage.serverURL = "api.garamtadka.com";
             localStorage.http = "https";
-            sessionStorage.loggedIn = false;
 
             document.getElementById("loginButton").addEventListener("click", function(){
                 formData = new FormData();
@@ -27,7 +26,7 @@
                 httpRequest('POST', '/authenticatePassword', formData).then((val)=>{
                     if(val.correct){
                         //sessionStorage.loggedIn = true;
-                        window.location.href = '/pages/category.html';
+                        window.location.href = '/pages/dashboard.html';
                     }else{
                         alert("Wrong password")
                     }

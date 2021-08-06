@@ -1,6 +1,6 @@
 httpRequest('GET', `${localStorage.http}://${localStorage.serverURL}/language?apikey=fVKHo9QEUQgWXjQ`).then((val)=>{
     let selector = document.getElementById("languageSelect");
-    let englishOption;
+    let englishOption = val.data[0];
     for(var language of val.data){
         if(language['name_english'] == language['name_native']) englishOption = language;
         let languageOption = document.createElement("option");

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='UTF-8'/>
+        <title>Admin Panel</title>
+
+        <link rel="stylesheet" href="/stylesheets/style.css"/> 
+        <link rel="stylesheet" href="/stylesheets/item.css"/>
+        <link rel="stylesheet" href="/stylesheets/dashboard/dashboard.css"/>
+        <link rel="stylesheet" href="/stylesheets/dashboard/dashboardNews.css"/>
+
+        <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react-transition-group/4.3.0/react-transition-group.min.js"></script>
+    </head>
+    <body>
+        <div id="navBar">
+            <div id="leftNav" style="display: flex; align-items: center;">
+                <div class="iconButton" id="sideMenuButton">
+                    <img src="/images/menu.svg" width="50%" style="user-select: none;"/>
+                </div>
+                <a href="/pages/dashboard.html" style="margin-left: 32px;"><img src="/images/logo.svg" height="80"/></a>
+            </div>
+        </div>
+        <div id="sideMenu">
+            <div class="sideMenuItem">
+                <img src="/images/home.png" height="100%" onClick="window.location.href='/pages/dashboard.html'"/>
+                <div style="margin-left: 16px;">Dashboard</div>
+            </div>
+            <div class="sideMenuItem" onClick="window.location.href='/pages/category.html'">
+                <img src="/images/topic.png" height="100%"/>
+                <div style="margin-left: 16px;">Categories</div>
+            </div>
+            <div class="sideMenuItem" onClick="window.location.href='/pages/language.html'">
+                <img src="/images/user.png" height="100%"/>
+                <div style="margin-left: 16px;">Languages & Variables</div>
+            </div>
+            <div class="sideMenuItem" onClick="window.location.href='/pages/post.html'">
+                <img src="/images/newspaper.png" height="100%"/>
+                <div style="margin-left: 16px;">Posts</div>
+            </div>
+        </div>
+        <div id="remainingBody" style="position: absolute; top: 11%; width: 100%; padding-left: 2.5%; padding-right: 2.5%;">
+            <div id="deviceDataHolder">
+                <div id="deviceCardsHolder">
+                    <div class="ComponentHolder" style="margin-bottom: 28px; flex: none;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 48px;">
+                            <div>
+                                <h2>Total Devices</h2>
+                                <h1 id="totalDevices"></h1>
+                            </div>
+                            <div style="padding: 12px; background-color: #dfd9fd; border-radius: 8px;">
+                                <img src="/images/devices.svg" width="40"/>
+                            </div>
+                        </div>
+                        <select id="deviceDaysSelector" style="margin-bottom: 16px;">
+                            <option value="" disabled selected>Select time frame for graph</option>
+                            <option value="7">1 Week</option>
+                            <option value="10">10 days</option>
+                            <option value="30">1 month</option>
+                            <option value="180">6 months</option>
+                            <option value="365">1 year</option>
+                            <option value="0">All time</option>
+                        </select>
+                    </div>
+                    <div class="ComponentHolder">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h2>Month Trend</h2>
+                                <h1 id="monthTrend"></h1>
+                            </div>
+                            <div style="padding: 12px; background-color: #dfd9fd; border-radius: 8px;">
+                                <img src="/images/trend.svg" width="40"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ComponentHolder" id="deviceGraphHolder">
+                    <canvas id="newDevices" style="width: 100%; height: 100%;"></canvas>
+                    <div id="deviceInformationBox" class="informationBox">
+                        <div id="deviceDate"></div>
+                        <div id="countDevices"><span id="number"></span> new devices</div>
+                        <div id="increaseOrDecrease">
+                            <img src="/images/up.svg" height="20" id="incOrDec"/>
+                            <span id="inDe"></span> % change from previous day
+                        </div>
+                    </div>
+                    <div class="pointer" id="devicePointer"></div>
+                </div>
+            </div>
+
+            <div id="newsDataHolder">
+                <div class="ComponentHolder" id="newsGraphHolder">
+                    <select id="newsDaysSelector" style="margin-bottom: 16px;">
+                        <option value="" disabled selected>Select time frame for graph</option>
+                        <option value="7">1 Week</option>
+                        <option value="10">10 days</option>
+                        <option value="30">1 month</option>
+                        <option value="180">6 months</option>
+                        <option value="365">1 year</option>
+                        <option value="0">All time</option>
+                    </select>
+                    <canvas id="newsCanvas" style="width: 100%; height: 92%;"></canvas>
+                    <div id="newsInformationBox" class="informationBox">
+                        <div id="newsDate"></div>
+                        <div id="countNews"><span id="numberNews"></span> Views</div>
+                        <div id="increaseOrDecreaseNews">
+                            <img src="/images/up.svg" height="20" id="incOrDecNews"/>
+                            <span id="inDeNews"></span> % change from previous day
+                        </div>
+                    </div>
+                    <div class="pointer" id="newsPointer"></div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="/javascripts/request.js"></script>
+        <script type="text/babel" src="/javascripts/itemTemplate.js"></script>
+        <script type="text/javascript" src="/javascripts/iconButton.js"></script>
+        <script type="text/javascript" src="/javascripts/dashboard/graph.js"></script>
+        <script type="text/javascript" src="/javascripts/dashboard/newsGraph.js"></script>
+        <script type="text/javascript" src="/javascripts/dashboard/getAnalyticData.js"></script>
+
+        <script>
+            window.addEventListener("click", function(e){
+                if(!e.target.classList.contains("menu") && (!e.target.parentElement || !e.target.parentElement.classList.contains("menu"))){
+                    let menus = document.getElementsByClassName("hovermenu");
+                    for(var menu of menus){
+                        menu.style.display = "none";
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>

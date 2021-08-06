@@ -15,14 +15,15 @@
     </head>
     <body>
         <div id="navBar">
-            <div id="leftNav">
+            <div id="leftNav" style="display: flex; align-items: center;">
                 <div class="iconButton" id="sideMenuButton">
                     <img src="/images/menu.svg" width="50%" style="user-select: none;"/>
                 </div>
+                <a href="/pages/dashboard.html" style="margin-left: 32px;"><img src="/images/logo.svg" height="80"/></a>
             </div>
         </div>
         <div id="sideMenu">
-            <div class="sideMenuItem">
+            <div class="sideMenuItem" onClick="window.location.href='/pages/dashboard.html'">
                 <img src="/images/home.png" height="100%"/>
                 <div style="margin-left: 16px;">Dashboard</div>
             </div>
