@@ -17,24 +17,6 @@ var app = express();
 var path = require('path');
 dateParser = require('./dateParser.js')
 
-// const AWS = require('aws-sdk');
-// AWS.config.update({
-//     accessKeyId: "AKIAQ62ZT6HUDBUOSMUZ",
-//     secretAccessKey: "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"
-// })
-
-// var s3 = new AWS.S3();
-
-// var params = {
-//   Bucket: "garamtadka",
-// }
-
-// const s3Actions = {
-//   upload: (config)=>{
-//       return util.promisify(s3.upload).call(s3, config);
-//   }
-// }
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
